@@ -10,4 +10,7 @@ urlpatterns = [
     path("jwt/create/", jwt_views.TokenObtainPairView.as_view(), name="jwt-create"),
     path("jwt/refresh/", jwt_views.TokenRefreshView.as_view(), name="jwt-refresh"),
     path("jwt/verify/", jwt_views.TokenVerifyView.as_view(), name="jwt-verify"),
+
+    # Voluntarios y Adoptantes
+    path('list/', ListUsuarioApiView.as_view(), name='list-usuario'),
 ]

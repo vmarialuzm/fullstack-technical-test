@@ -48,3 +48,27 @@ class ChangePasswordView(APIView):
         # Agregar un log de cambio de contraseña o enviar un correo de confirmación de cambio de contraseña
         return Response({'msg': 'Contraseña cambiada exitosamente'}, status=status.HTTP_200_OK)
 
+
+# ************************* VOLUNTARIOS Y ADOPTANTES*************************
+
+class ListUsuarioApiView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        """
+        Lista y crea los voluntarios y adoptantes
+        """
+        tipo_usuario = request.query_params.get("tipo")
+
+        if tipo_usuario == "1":
+            users = User.objects.filter(tipo=tipo_usuario)
+        elif tipo_usuario == "2":
+            users = User.objects.filter(tipo=tipo_usuario)
+        else:
+            return Response({"msg": "No se proporcionó un tipo de usuario correcto"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    

@@ -28,7 +28,12 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
+    TIPO_USUARIO = [("1", "Voluntario"), ("2", "Adoptante")]
+    ESTADO_USUARIO = [("1", "Activo"), ("2", "Inactivo")]
+
     email = models.EmailField(_('email address'), unique=True)
+    tipo = models.CharField(max_length=1, choices=TIPO_USUARIO, default="1")
+    estado = models.CharField(max_length=1, choices=ESTADO_USUARIO, default="1")
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('username',)

@@ -32,3 +32,17 @@ class PasswordChangeSerializer(serializers.Serializer):
         if not self.context['request'].user.check_password(value):
             raise serializers.ValidationError({'current_password': 'Does not match'})
         return value
+    
+
+class UserSerializer(serializers.ModelSerializer):
+    tipo = serializers.SerializerMethodField()
+    estado = serializers.SerializerMethodField()
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'tipo', 'estado']
+    
+    def get_tipo(self, obj):
+        return obj.get_tipo_display()
+    
+    def get_estado(self, obj):
+        return obj.get_estado_display()
