@@ -13,4 +13,5 @@ urlpatterns = [
 
     # Voluntarios y Adoptantes
     path('list/', ListUsuarioApiView.as_view(), name='list-usuario'),
+    path('list/<int:id>/', DetailUsuarioApiView.as_view(), name='usuario'),
 ]

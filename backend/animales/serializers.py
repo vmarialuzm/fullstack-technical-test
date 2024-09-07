@@ -3,15 +3,16 @@ from rest_framework import serializers
 
 
 class AnimalesSerializer(serializers.ModelSerializer):
-    tipo = serializers.SerializerMethodField()
-    estado = serializers.SerializerMethodField()
-
     class Meta:
         model = Animales
-        fields = '__all__'
+        fields = ['id', 'nombre', 'edad', 'raza', 'tipo', 'estado']
+        extra_kwargs = {
+            'tipo': {'required': True},
+            'estado': {'required': True}
+        }
 
-    def get_tipo(self, obj):
-        return obj.get_tipo_display()
-    
-    def get_estado(self, obj):
-        return obj.get_estado_display()
+    def to_representation(self, instance):
+        representation =  super().to_representation(instance)
+        representation['tipo'] = instance.get_tipo_display()
+        representation['estado'] = instance.get_estado_display()
+        return representation

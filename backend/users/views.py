@@ -5,7 +5,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
 from .utils import get_tokens_for_user
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django.shortcuts import get_object_or_404
 
 
 class RegistrationView(APIView):
@@ -53,7 +54,7 @@ class ChangePasswordView(APIView):
 
 class ListUsuarioApiView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
     def get(self, request, *args, **kwargs):
         """
@@ -70,5 +71,28 @@ class ListUsuarioApiView(APIView):
         
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class DetailUsuarioApiView(APIView):
+
+    permission_classes = [IsAdminUser]
+    
+    def get(self, request, id, *args, **kwargs):
+        usuario = get_object_or_404(User, pk=id)
+        serializer = UserSerializer(usuario)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def put(self, request, id, *args, **kwargs):
+        usuario = get_object_or_404(User, pk=id)
+        serializer = UserSerializer(usuario, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, id, *args, **kwargs):
+        usuario = get_object_or_404(User, pk=id)
+        usuario.delete()
+        return Response({"msg": "Usuario eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)
     
     

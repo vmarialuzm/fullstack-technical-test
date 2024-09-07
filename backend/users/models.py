@@ -32,7 +32,7 @@ class User(AbstractUser):
     ESTADO_USUARIO = [("1", "Activo"), ("2", "Inactivo")]
 
     email = models.EmailField(_('email address'), unique=True)
-    tipo = models.CharField(max_length=1, choices=TIPO_USUARIO, default="1")
+    tipo = models.CharField(max_length=1, choices=TIPO_USUARIO)
     estado = models.CharField(max_length=1, choices=ESTADO_USUARIO, default="1")
 
     USERNAME_FIELD = 'email'
