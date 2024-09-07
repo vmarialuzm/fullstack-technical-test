@@ -13,7 +13,7 @@ class ListaAndCreateAnimalesApiView(APIView):
 
     def get(self, request, *args, **kwargs):
         """
-        Lista y crea los animales
+        Lista los animales
         """
         animales = Animales.objects.all()
         serializer = AnimalesSerializer(animales, many=True)
