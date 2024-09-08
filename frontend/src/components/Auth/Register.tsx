@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { TextInput, Button, PasswordInput, Select, Box } from '@mantine/core';
+import { TextInput, Button, PasswordInput, Select, Notification } from '@mantine/core';
 import { registerUser } from '../../services/authService';
+import { useNavigate } from 'react-router-dom'; 
+import AuthFormWrapper from '../Layout/AuthFormWrapper';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +14,9 @@ const Register = () => {
     password: '',
     password2: '',
   });
+
+  const [notification, setNotification] = useState({ message: '', type: '' });
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -33,15 +38,30 @@ const Register = () => {
     e.preventDefault();
     try {
       const response = await registerUser(formData);
+      setNotification({ message: 'Registro exitoso', type: 'success' });
       console.log(response.data); // Muestra la respuesta
+
+      // Redirigir al login después del registro exitoso
+      navigate('/login'); 
     } catch (error) {
+      setNotification({ message: 'Error al registrar. Intenta nuevamente.', type: 'error' });
       console.error(error);
     }
   };
 
+  // Redirigir al login si el usuario hace clic en "Inicia sesión"
+  const handleToggleForm = () => {
+    navigate('/login'); // Redirige a la ruta de login
+  };
+
   return (
-    <Box maw={400} mx="auto">
-        xddddd
+    <AuthFormWrapper title="Crea tu cuenta" toggleText="Inicia sesión" toggleForm={handleToggleForm}>
+      {notification.message && (
+        <Notification color={notification.type === 'success' ? 'green' : 'red'}>
+          {notification.message}
+        </Notification>
+      )}
+
       <form onSubmit={handleSubmit}>
         <TextInput
           label="Username"
@@ -106,7 +126,7 @@ const Register = () => {
           Registrar
         </Button>
       </form>
-    </Box>
+    </AuthFormWrapper>
   );
 };
 

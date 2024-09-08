@@ -1,12 +1,23 @@
 import { useState } from 'react';
-import { TextInput, Button, PasswordInput, Box } from '@mantine/core';
+import { TextInput, Button, PasswordInput, Group, Notification } from '@mantine/core';
+import { IconCheck, IconX } from '@tabler/icons-react';
 import { loginUser } from '../../services/authService';
+import { useNavigate } from 'react-router-dom';
+import AuthFormWrapper from '../Layout/AuthFormWrapper';
 
-const Login = () => {
+
+interface LoginProps {
+  onLoginSuccess: () => void;
+}
+
+const Login = ({ onLoginSuccess }: LoginProps) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState({ message: '', type: '' });
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -17,16 +28,31 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await loginUser(formData);
-      console.log(response.data); // Maneja la respuesta
+      localStorage.setItem('token', response.data.access);
+      setNotification({ message: 'Inicio de sesión exitoso', type: 'success' });
+      setLoading(false);
+      onLoginSuccess(); // Actualiza el estado de autenticación
+      navigate('/home'); // Redirige a Home
     } catch (error) {
-      console.error(error);
+      setNotification({ message: 'Error al iniciar sesión. Revisa tu email o contraseña.', type: 'error' });
+      setLoading(false);
     }
   };
 
+  const handleToggleForm = () => {
+    navigate('/register');
+  }
+
   return (
-    <Box maw={400} mx="auto">
+    <AuthFormWrapper title="Iniciar Sesión" toggleForm={handleToggleForm} toggleText="Crear Cuenta">
+      {notification.message && (
+        <Notification icon={notification.type === 'success' ? <IconCheck size="1.1rem" /> : <IconX size="1.1rem" />} color={notification.type}>
+          {notification.message}
+        </Notification>
+      )}
       <form onSubmit={handleSubmit}>
         <TextInput
           label="Email"
@@ -44,11 +70,13 @@ const Login = () => {
           onChange={handleChange}
           required
         />
-        <Button type="submit" fullWidth mt="md">
-          Iniciar Sesión
-        </Button>
+        <Group mt="md">
+          <Button type="submit" loading={loading} fullWidth mt="md">
+            Iniciar Sesión
+          </Button>
+        </Group>
       </form>
-    </Box>
+    </AuthFormWrapper>
   );
 };
 
