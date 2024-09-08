@@ -4,6 +4,8 @@ import Login from './components/Auth/Login';
 import Home from './components/Home/Home';
 import { useEffect, useState } from 'react';
 import Header from './components/Home/Header';
+import Footer from './components/Home/Footer';
+import { Box } from '@mantine/core';
 
 
 function App() {
@@ -26,16 +28,28 @@ function App() {
   };
 
   return (
-    <Router>
-      <Header isAuthenticated={isAuthenticated} onLogout={handleLogout} />
-      
-      <Routes>
-        <Route path="/login" element={!isAuthenticated ? <Login onLoginSuccess={handleLoginSuccess} /> : <Navigate to="/home" />} />
-        <Route path="/register" element={<Register />} />
-        <Route path='/home' element={isAuthenticated ? <Home /> : <Navigate to= "/login" />} />
-        <Route path='/' element={<Navigate to="/login" />} />
-      </Routes>
-    </Router>
+    <Box
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh', // Ocupa todo el alto de la pantalla
+      }}
+    >
+      <Router>
+        <Header isAuthenticated={isAuthenticated} onLogout={handleLogout} />
+        
+        <Box style={{ flex: 1, padding: '20px' }}> 
+          <Routes>
+            <Route path="/login" element={!isAuthenticated ? <Login onLoginSuccess={handleLoginSuccess} /> : <Navigate to="/home" />} />
+            <Route path="/register" element={<Register />} />
+            <Route path='/home' element={isAuthenticated ? <Home /> : <Navigate to= "/login" />} />
+            <Route path='/' element={<Navigate to="/login" />} />
+          </Routes>
+        </Box>
+
+        <Footer />
+      </Router>
+    </Box>
   );
 }
 
