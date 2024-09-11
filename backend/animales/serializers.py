@@ -13,6 +13,6 @@ class AnimalesSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation =  super().to_representation(instance)
-        representation['tipo'] = instance.get_tipo_display()
-        representation['estado'] = instance.get_estado_display()
+        representation['tipo_display'] = instance.get_tipo_display()
+        representation['estado_display'] = instance.get_estado_display()
         return representation

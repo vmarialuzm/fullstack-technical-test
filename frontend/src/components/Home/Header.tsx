@@ -17,8 +17,8 @@ const Header = ({ isAuthenticated, onLogout }: HeaderProps) => {
   return (
     <Box
       style={(theme) => ({
-        backgroundColor: theme.colors.gray[0], // Aquí sí se accede al theme correctamente
-        padding: theme.spacing.md,             // Lo mismo con el padding
+        backgroundColor: theme.colors.gray[0], 
+        padding: theme.spacing.md,             
         borderBottom: `1px solid ${theme.colors.gray[3]}`, 
       })}
     >

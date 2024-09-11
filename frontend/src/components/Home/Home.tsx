@@ -8,7 +8,9 @@ interface Animal {
   edad: string;
   raza: string;
   tipo: string;
+  tipo_display: string;
   estado: string;
+  estado_display: string;
 }
 
 const Home = () => {
@@ -78,8 +80,8 @@ const Home = () => {
               <td>{animal.nombre}</td>
               <td>{animal.edad}</td>
               <td>{animal.raza}</td>
-              <td>{animal.tipo}</td>
-              <td>{animal.estado}</td>
+              <td>{animal.tipo_display}</td>
+              <td>{animal.estado_display}</td>
               <td>
                 <Flex
                 direction={{ base: 'column', sm: 'row' }}
