@@ -49,7 +49,7 @@ const Header = ({ isAuthenticated, onLogout }: HeaderProps) => {
                   <Link to='/adopter' style={{ textDecoration: 'none', margin: '0 10px' }}>
                     Adoptantes
                   </Link>
-                  <Link to='#' style={{ textDecoration: 'none', margin: '0 10px' }}>
+                  <Link to='/adopciones' style={{ textDecoration: 'none', margin: '0 10px' }}>
                     Adopciones
                   </Link>
                 </Group>

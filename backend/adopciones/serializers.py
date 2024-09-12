@@ -11,7 +11,7 @@ class AdopcionesUpsertSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation =  super().to_representation(instance)
-        representation['estado'] = instance.get_estado_display()
+        representation['estado_display'] = instance.get_estado_display()
         return representation
     
 
@@ -25,5 +25,5 @@ class AdopcionesGetSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation =  super().to_representation(instance)
-        representation['estado'] = instance.get_estado_display()
+        representation['estado_display'] = instance.get_estado_display()
         return representation
