@@ -46,7 +46,7 @@ const Header = ({ isAuthenticated, onLogout }: HeaderProps) => {
                   <Link to='/volunteer' style={{ textDecoration: 'none', margin: '0 10px' }}>
                     Voluntarios
                   </Link>
-                  <Link to='#' style={{ textDecoration: 'none', margin: '0 10px' }}>
+                  <Link to='/adopter' style={{ textDecoration: 'none', margin: '0 10px' }}>
                     Adoptantes
                   </Link>
                   <Link to='#' style={{ textDecoration: 'none', margin: '0 10px' }}>
