@@ -11,7 +11,7 @@ El sistema soporta funcionalidades como creación, actualización, eliminación 
 1. Clone the repository.
 
 ```git
-git clone https://github.com/Trigono-Inversiones-SAC/TIC.git
+git clone git@github.com:vmarialuzm/fullstack-technical-test.git
 ```
 
 2. CD to the backend folder
