@@ -1,5 +1,5 @@
-import { Button, Container, Flex, Box, Image, Anchor, Group } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
+import { Button, Container, Flex, Box, Image, Group } from '@mantine/core';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface HeaderProps {
   isAuthenticated: boolean;
@@ -40,18 +40,18 @@ const Header = ({ isAuthenticated, onLogout }: HeaderProps) => {
           {isAuthenticated && (
             <Flex>
               <Group justify='center'>
-                  <Anchor href='/home' underline="hover">
+                  <Link to='/home' style={{ textDecoration: 'none', margin: '0 10px' }}>
                     Animales
-                  </Anchor>
-                  <Anchor href='#' underline="hover">
+                  </Link>
+                  <Link to='/volunteer' style={{ textDecoration: 'none', margin: '0 10px' }}>
                     Voluntarios
-                  </Anchor>
-                  <Anchor href='#' underline="hover">
+                  </Link>
+                  <Link to='#' style={{ textDecoration: 'none', margin: '0 10px' }}>
                     Adoptantes
-                  </Anchor>
-                  <Anchor href='#' underline="hover">
+                  </Link>
+                  <Link to='#' style={{ textDecoration: 'none', margin: '0 10px' }}>
                     Adopciones
-                  </Anchor>
+                  </Link>
                 </Group>
             </Flex>
           )}
