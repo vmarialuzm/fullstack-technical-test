@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Table, Button, Modal, Box, Select, Title, Flex } from '@mantine/core';
 import { getAllAdopciones, createAdopcion, updateAdopcion, deleteAdopcion } from '../../services/adopcionService';
 import { getAllAnimals } from '../../services/animalService';
-import { getUsersByType } from '../../services/userService'; // Usa la misma función para voluntarios y adoptantes
+import { getUsersByType } from '../../services/userService';
 
 interface Adoption {
   id: string;
@@ -80,9 +80,9 @@ const Adopciones = () => {
   const handleEdit = (adoption: Adoption) => {
     setEditingAdoption(adoption);
     setNewAdoption({
-      animal: adoption.animal.id,
-      voluntario: adoption.voluntario?.id || '',
-      adoptante: adoption.adoptante?.id || '',
+      animal: adoption.animal.id.toString(),
+      voluntario: adoption.voluntario?.id?.toString() || '',
+      adoptante: adoption.adoptante?.id?.toString() || '',
       estado: adoption.estado,
     });
     setModalOpen(true);
