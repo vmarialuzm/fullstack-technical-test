@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
 from .utils import get_tokens_for_user
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from django.shortcuts import get_object_or_404
 
 
@@ -54,7 +54,7 @@ class ChangePasswordView(APIView):
 
 class ListUsuarioApiView(APIView):
 
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         """
@@ -75,7 +75,10 @@ class ListUsuarioApiView(APIView):
 
 class DetailUsuarioApiView(APIView):
 
-    permission_classes = [IsAdminUser]
+    def get_permissions(self):
+        if self.request.method in ['PUT', 'DELETE']:
+            return [IsAdminUser()]
+        return [AllowAny()]
     
     def get(self, request, id, *args, **kwargs):
         usuario = get_object_or_404(User, pk=id)

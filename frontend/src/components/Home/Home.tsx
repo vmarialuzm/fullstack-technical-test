@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Table, Button, Modal, TextInput, Box, Select, Title, Flex } from '@mantine/core';
 import { getAllAnimals, createAnimal, updateAnimal, deleteAnimal } from '../../services/animalService';
+import { createAdopcion } from '../../services/adopcionService'
+import { parseJwt } from '../../services/authService'
+import { getUsersById } from '../../services/userService'
+
 
 interface Animal {
   id: string;
@@ -13,14 +17,42 @@ interface Animal {
   estado_display: string;
 }
 
+interface Adoption {
+  animal: any;
+  adoptante: any;
+}
+
 const Home = () => {
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [userId, setUserId] = useState('');
   const [editingAnimal, setEditingAnimal] = useState<Animal | null>(null);
   const [newAnimal, setNewAnimal] = useState({ nombre: '', edad: '', raza: '', tipo: '', estado: ''});
+  const [tipoDisplay, setTipoDisplay] = useState('');
 
   useEffect(() => {
-    fetchAnimals();
+    const fetchUserData = async () => {
+      const token = localStorage.getItem('token');
+      console.log(typeof token);
+
+      if (token) {
+        const decodedToken = parseJwt(token);
+        if (decodedToken?.user_id) {
+          setUserId(decodedToken?.user_id);
+          try {
+            const response = await getUsersById(decodedToken?.user_id);
+            setTipoDisplay(response.data.tipo_display);
+          } catch (error) {
+            console.error("Error al obtener el usuario:", error);
+          }
+        }
+      } else {
+        console.log("No se encontró un token en localStorage.");
+      }
+      console.log(tipoDisplay)
+    };
+    fetchUserData();
+    fetchAnimals()
   }, []);
 
   const fetchAnimals = async () => {
@@ -54,13 +86,21 @@ const Home = () => {
     await deleteAnimal(id);
     fetchAnimals();
   };
+  
+  const handleAdopcion = (adoption: Adoption ) => {
+    createAdopcion(adoption)
+  }
 
   return (
     <Box maw={1000} mx="auto">
       <Title order={2} mb="lg" ta="center">
         Albergue de Animales Rescatados
       </Title>
-      <Button onClick={() => setModalOpen(true)} mb="md" color='lime'>Agregar Animal</Button>
+      {tipoDisplay !== 'Adoptante' && (
+        <>
+          <Button onClick={() => setModalOpen(true)} mb="md" color='lime'>Agregar Animal</Button>
+        </>
+      )}
       <Table highlightOnHover withColumnBorders striped horizontalSpacing="sm" verticalSpacing="md">
         <thead style={{ backgroundColor: '#f4f4f4' }}>
           <tr>
@@ -88,8 +128,19 @@ const Home = () => {
                 gap={{ base: 'sm', sm: 'lg' }}
                 justify={{ sm: 'center' }}
                 >
-                  <Button onClick={() => handleEdit(animal)} size="xs" mr="sm" color="gray">Editar</Button>
-                  <Button onClick={() => handleDelete(animal.id)} size="xs" color="red">Eliminar</Button>
+                  {tipoDisplay !== 'Adoptante' && (
+                    <>
+                      <Button onClick={() => handleEdit(animal)} size="xs" mr="sm" color="gray">Editar</Button>
+                      <Button onClick={() => handleDelete(animal.id)} size="xs" color="red">Eliminar</Button>
+                    </>
+                  )}
+                  {tipoDisplay === 'Adoptante' && (
+                    <>
+                      <Button onClick={() => handleAdopcion({ animal: animal.id, adoptante: userId })} size="xs" color="blue">
+                        Solicitar adopción
+                      </Button>
+                    </>
+                  )}
                 </Flex>
               </td>
             </tr>

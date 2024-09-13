@@ -17,13 +17,21 @@ export const getAllAdopciones = async () => {
   });
 };
 
+
 export const createAdopcion = async (adopcion: any) => {
   const token = getAuthToken();
-  return await axios.post(`${API_URL}/`, adopcion, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    }
-  });
+  try {
+    const response = await axios.post(`${API_URL}/`, adopcion, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+
+    alert('Adopcion solicitada correctamente')
+
+  } catch (error) {
+    alert(error)
+  }
 };
 
 export const updateAdopcion = async (id: string, adopcion: any) => {

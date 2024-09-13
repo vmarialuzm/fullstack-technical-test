@@ -1,5 +1,8 @@
 import { Button, Container, Flex, Box, Image, Group } from '@mantine/core';
 import { Link, useNavigate } from 'react-router-dom';
+import { parseJwt } from '../../services/authService'
+import { getUsersById } from '../../services/userService'
+import { useState, useEffect } from 'react';
 
 interface HeaderProps {
   isAuthenticated: boolean;
@@ -8,11 +11,36 @@ interface HeaderProps {
 
 const Header = ({ isAuthenticated, onLogout }: HeaderProps) => {
   const navigate = useNavigate();
+  const [tipoDisplay, setTipoDisplay] = useState('');
 
   const handleLogoutClick = () => {
     onLogout(); 
     navigate('/login'); 
   };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem('token');
+      console.log(token);
+      console.log(typeof token);
+
+      if (token) {
+        const decodedToken = parseJwt(token);
+        if (decodedToken?.user_id) {
+          try {
+            const response = await getUsersById(decodedToken?.user_id);
+            setTipoDisplay(response.data.tipo_display);
+          } catch (error) {
+            console.error("Error al obtener el usuario:", error);
+          }
+        }
+      } else {
+        console.log("No se encontró un token en localStorage.");
+      }
+      console.log(tipoDisplay)
+    };
+    fetchUserData();
+  }, []);
 
   return (
     <Box
@@ -43,15 +71,21 @@ const Header = ({ isAuthenticated, onLogout }: HeaderProps) => {
                   <Link to='/home' style={{ textDecoration: 'none', margin: '0 10px' }}>
                     Animales
                   </Link>
-                  <Link to='/volunteer' style={{ textDecoration: 'none', margin: '0 10px' }}>
-                    Voluntarios
-                  </Link>
-                  <Link to='/adopter' style={{ textDecoration: 'none', margin: '0 10px' }}>
-                    Adoptantes
-                  </Link>
-                  <Link to='/adopciones' style={{ textDecoration: 'none', margin: '0 10px' }}>
-                    Adopciones
-                  </Link>
+                  {tipoDisplay !== 'Adoptante' && (
+                    <>
+                      {tipoDisplay !== 'Voluntario' && (
+                        <Link to='/volunteer' style={{ textDecoration: 'none', margin: '0 10px' }}>
+                          Voluntarios
+                        </Link>
+                      )}
+                      <Link to='/adopter' style={{ textDecoration: 'none', margin: '0 10px' }}>
+                        Adoptantes
+                      </Link>
+                      <Link to='/adopciones' style={{ textDecoration: 'none', margin: '0 10px' }}>
+                        Adopciones
+                      </Link>
+                    </>
+                  )}
                 </Group>
             </Flex>
           )}

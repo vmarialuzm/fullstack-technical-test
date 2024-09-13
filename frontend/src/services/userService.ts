@@ -18,6 +18,15 @@ export const getUsersByType = async (tipo: string) => {
   });
 };
 
+export const getUsersById = async (id: string) => {
+  const token = getAuthToken();
+  return await axios.get(`${API_URL}/list/${id}/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  });
+};
+
 export const updateUser = async (id: string, userData: any) => {
   const token = getAuthToken();
   return await axios.put(`${API_URL}/list/${id}/`, userData, {
